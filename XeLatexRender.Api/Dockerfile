@@ -1,9 +1,4 @@
 ﻿FROM archlinux AS registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render:latest
-USER root
-RUN pacman -Syu --noconfirm --needed
-RUN pacman -S --noconfirm --needed texlive texlive-lang
-RUN tlmgr install exam-zh
-USER tex
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
