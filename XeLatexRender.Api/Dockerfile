@@ -1,9 +1,9 @@
 ﻿FROM archlinux AS base
 USER root
 RUN pacman -Syu --noconfirm --needed
-RUN pacman -S texlive texlive-lang
+RUN pacman -S --noconfirm --needed texlive texlive-lang
 RUN tlmgr install exam-zh
-USER $APP_UID
+USER tex
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
