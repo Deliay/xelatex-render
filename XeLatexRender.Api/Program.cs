@@ -77,5 +77,5 @@ async Task XeLaTex(string cwd, string fileName, CancellationToken cancellationTo
     
     await process.WaitForExitAsync(cancellationToken);
     
-    if (process.ExitCode > 0) throw new InvalidOperationException("XeLaTex exited with code " + process.ExitCode);
+    if (process.ExitCode > 0) throw new InvalidOperationException("XeLaTex exited with code " + process.ExitCode + ".");
 }
