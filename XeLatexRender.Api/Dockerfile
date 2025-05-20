@@ -1,4 +1,4 @@
-﻿FROM archlinux AS registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render:latest
+﻿FROM registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render:latest AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
