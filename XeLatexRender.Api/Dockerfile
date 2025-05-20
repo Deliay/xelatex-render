@@ -1,4 +1,4 @@
-﻿FROM archlinux AS base
+﻿FROM archlinux AS registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render:latest
 USER root
 RUN pacman -Syu --noconfirm --needed
 RUN pacman -S --noconfirm --needed texlive texlive-lang
