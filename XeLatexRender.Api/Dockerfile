@@ -19,6 +19,8 @@ RUN dotnet build "./XeLatexRender.Api.csproj" -c $BUILD_CONFIGURATION -o /app/bu
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+RUN apt update
+RUN apt install clang -y
 RUN dotnet publish "./XeLatexRender.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 
 FROM base AS final
