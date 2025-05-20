@@ -1,4 +1,4 @@
-﻿FROM registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render:latest AS base
+﻿FROM registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render-base:latest AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
