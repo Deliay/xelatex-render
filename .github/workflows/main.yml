@@ -1,0 +1,23 @@
+name: Build Image and Publish to Registry
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "XeLatexRender.Api" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to repository
+      run: docker login ${{secrets.DOCKER_ENDPOINT}} -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
+
+    - name: Build the Docker image
+      run: docker build --pull -f XeLatexRender.Api/Dockerfile . -t ${{secrets.DOCKER_ENDPOINT}}/zero-tools/xelatex-render:latest
+
+    - name: Push image
+      run: docker push ${{secrets.DOCKER_ENDPOINT}}/zero-tools/xelatex-render:latest
