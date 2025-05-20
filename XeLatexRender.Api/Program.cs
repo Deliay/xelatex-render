@@ -2,26 +2,26 @@ using System.Diagnostics;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+
 var app = builder.Build();
 
-var apiGroup = app.MapGroup("/api/xelatex");
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
-apiGroup.MapPost("/", async (HttpContext ctx, CancellationToken cancellationToken) =>
+app.MapPost("/api/xelatex", async (IFormFile tex, CancellationToken cancellationToken) =>
 {
-    if (ctx.Request.Form.Files is not { Count: 0 }) return Results.BadRequest("Required only one file uploaded.");
-    var upload = ctx.Request.Form.Files[0];
-
     try
     {
-        await using var stream = upload.OpenReadStream();
-        var pdfFileName = $"{Path.GetFileNameWithoutExtension(upload.FileName)}.pdf";
+        await using var stream = tex.OpenReadStream();
+        var pdfFileName = $"{Path.GetFileNameWithoutExtension(tex.FileName)}.pdf";
         return Results.File(await Compile(stream, cancellationToken), "application/pdf", pdfFileName);
     }
     catch (Exception ex)
     {
-        return Results.BadRequest($"An error occured while processing your request.\n{ex.Message}");
+        return Results.Text($"An error occured while processing your request.\n{ex.Message}", 
+            contentType: "text/plain", 
+            statusCode: 400);
     }
-});
+}).DisableAntiforgery();
 
 app.Run();
 
@@ -32,7 +32,9 @@ async ValueTask<byte[]> Compile(Stream tex, CancellationToken cancellationToken)
     var jobName = Guid.NewGuid().ToString();
     var texFileName = $"{jobName}.tex";
     var texFilePath = Path.Combine(cwd, texFileName);
-
+    
+    logger.LogInformation("Starting compiling tex {}", texFilePath);
+    
     await using (var texFileWriteStream = File.OpenWrite(texFilePath))
     {
         await tex.CopyToAsync(texFileWriteStream, cancellationToken);
@@ -66,7 +68,7 @@ async Task XeLaTex(string cwd, string fileName, CancellationToken cancellationTo
     var psi = new ProcessStartInfo()
     {
         FileName = "xelatex",
-        Arguments = $"-interaction=nonstopmode -halt-on-error ${fileName}",
+        Arguments = $" -interaction=nonstopmode -halt-on-error {fileName} ",
         RedirectStandardInput = true,
         CreateNoWindow = true,
         WorkingDirectory = cwd,
