@@ -2,6 +2,9 @@
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+USER root
+RUN useradd tex
+USER tex
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
