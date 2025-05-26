@@ -1,5 +1,4 @@
 ﻿FROM registry.cn-hangzhou.aliyuncs.com/zero-tools/xelatex-render-base:latest AS base
-USER root
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
@@ -22,4 +21,4 @@ RUN dotnet publish "./XeLatexRender.Api.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["XeLatexRender.Api"]
+ENTRYPOINT ["/app/XeLatexRender.Api"]
